@@ -8,7 +8,8 @@ var recipes = [{"recipe": 'soup', "ingridients": 'onion, potato, wather'}, {
 var Collapse = ReactBootstrap.Collapse;
 var Button = ReactBootstrap.Button;
 var Modal = ReactBootstrap.Modal;
-
+var FormControl = ReactBootstrap.FormControl;
+var ControlLabel = ReactBootstrap.ControlLabel;
 var Recipe = React.createClass({
     getInitialState: function () {
         return {
@@ -52,22 +53,6 @@ var Recipe = React.createClass({
     }
 });
 
-function AddRecipe() {
-    return (
-        <Modal.Dialog>
-            <Modal.Header>
-                <Modal.Title>Modal title</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                One fine body...
-            </Modal.Body>
-            <Modal.Footer>
-                <Button>Close</Button>
-                <Button bsStyle="primary">Save changes</Button>
-            </Modal.Footer>
-        </Modal.Dialog>)
-}
-
 var RecipeBox = React.createClass({
     getInitialState: function () {
         return {
@@ -77,6 +62,15 @@ var RecipeBox = React.createClass({
     },
     addRecipe: function () {
         this.setState({childVisible: !this.state.childVisible})
+    },
+    addIngridients: function () {
+        var recipeTitle = $("#recipeTitle").val();
+        var ingidients = $("#ingridients").val();
+        recipes.push({"recipe": recipeTitle, "ingridients": ingidients});
+        this.setState({
+            childVisible: !this.state.childVisible,
+            recipes: recipes
+        })
     },
     render: function () {
         const recipesList = [];
@@ -90,7 +84,28 @@ var RecipeBox = React.createClass({
                 <Button onClick={this.addRecipe} bsStyle="primary">Add Recipe</Button>
                 {
                     this.state.childVisible
-                        ? <AddRecipe />
+                        ? <Modal.Dialog>
+                        <Modal.Body>
+                            <form>
+                                <ControlLabel>Recipe title</ControlLabel>
+                                <FormControl
+                                    type="text"
+                                    id='recipeTitle'
+                                    placeholder="Enter recipe title"
+                                    />
+                                <ControlLabel>Ingridients</ControlLabel>
+                                <FormControl
+                                    type="text"
+                                    id='ingridients'
+                                    placeholder="Enter the ingridients throught coma"
+                                    />
+                            </form>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button onClick={this.addRecipe}>Close</Button>
+                            <Button onClick={this.addIngridients} bsStyle="primary">Save changes</Button>
+                        </Modal.Footer>
+                    </Modal.Dialog>
                         : null
                 }
             </div>
