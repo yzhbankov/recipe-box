@@ -7,6 +7,7 @@ var recipes = [{"recipe": 'soup', "ingridients": 'onion, potato, wather'}, {
 }];
 var Collapse = ReactBootstrap.Collapse;
 var Button = ReactBootstrap.Button;
+var Modal = ReactBootstrap.Modal;
 
 var Recipe = React.createClass({
     getInitialState: function () {
@@ -51,12 +52,31 @@ var Recipe = React.createClass({
     }
 });
 
+function AddRecipe() {
+    return (
+        <Modal.Dialog>
+            <Modal.Header>
+                <Modal.Title>Modal title</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                One fine body...
+            </Modal.Body>
+            <Modal.Footer>
+                <Button>Close</Button>
+                <Button bsStyle="primary">Save changes</Button>
+            </Modal.Footer>
+        </Modal.Dialog>)
+}
 
 var RecipeBox = React.createClass({
     getInitialState: function () {
         return {
-            recipes: recipes
+            recipes: recipes,
+            childVisible: false
         }
+    },
+    addRecipe: function () {
+        this.setState({childVisible: !this.state.childVisible})
     },
     render: function () {
         const recipesList = [];
@@ -67,8 +87,14 @@ var RecipeBox = React.createClass({
             <div>
                 <div className='container'>Recipe Box</div>
                 {recipesList}
-                <Button bsStyle="primary">Add Recipe</Button>
+                <Button onClick={this.addRecipe} bsStyle="primary">Add Recipe</Button>
+                {
+                    this.state.childVisible
+                        ? <AddRecipe />
+                        : null
+                }
             </div>
+
         )
     }
 });
