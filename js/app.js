@@ -14,7 +14,8 @@ var ControlLabel = ReactBootstrap.ControlLabel;
 var Recipe = React.createClass({
     getInitialState: function () {
         return {
-            showRecipe: true
+            showRecipe: true,
+            childVisible: false
         }
     },
     getList: function (list) {
@@ -35,9 +36,26 @@ var Recipe = React.createClass({
             showRecipe: false
         });
     },
+    editRecipe: function () {
+        this.setState({
+            childVisible: !this.state.childVisible
+        });
+    },
+    saveEditions: function (e) {
+        this.props.recipe.recipe = document.getElementById('recipeTitle').value;
+        this.props.recipe.ingridients = document.getElementById('ingridients').value;
+        recipes[e.target.id] = {
+            "recipe": document.getElementById('recipeTitle').value,
+            "ingridients": document.getElementById('ingridients').value,
+            "id": e.target.id
+        };
+
+        this.setState({
+            childVisible: !this.state.childVisible
+        });
+    },
     render: function () {
         var element = (<div></div>);
-
         if (this.state.showRecipe) {
             element = (<div>
                 <div className="panel panel-default">
@@ -56,6 +74,35 @@ var Recipe = React.createClass({
                             <Button onClick={this.deleteRecipe} bsStyle="danger"
                                     id={this.props.recipe.id}>Delete</Button>
                             <Button onClick={this.editRecipe} id={this.props.recipe.id}>Edit</Button>
+
+                            {
+                                this.state.childVisible
+                                    ? <Modal.Dialog>
+                                    <Modal.Body>
+                                        <form>
+                                            <ControlLabel>Recipe title</ControlLabel>
+                                            <FormControl
+                                                type="text"
+                                                id='recipeTitle'
+                                                placeholder={this.props.recipe.recipe}
+                                                />
+                                            <ControlLabel>Ingridients</ControlLabel>
+                                            <FormControl
+                                                type="text"
+                                                id='ingridients'
+                                                placeholder={this.props.recipe.ingridients}
+                                                />
+                                        </form>
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                        <Button onClick={this.editRecipe} id={this.props.recipe.id}>Close</Button>
+                                        <Button onClick={this.saveEditions} id={this.props.recipe.id} bsStyle="primary">Save
+                                            changes</Button>
+                                    </Modal.Footer>
+                                </Modal.Dialog>
+                                    : null
+                            }
+
                         </div>
                     </Collapse>
                 </div>
@@ -76,10 +123,12 @@ var RecipeBox = React.createClass({
     addRecipe: function () {
         this.setState({childVisible: !this.state.childVisible})
     },
-    addIngridients: function () {
+    saveRecipe: function () {
         var recipeTitle = $("#recipeTitle").val();
         var ingidients = $("#ingridients").val();
+        console.log(recipeTitle);
         recipes.push({"recipe": recipeTitle, "ingridients": ingidients});
+
         this.setState({
             childVisible: !this.state.childVisible,
             recipes: recipes
@@ -117,7 +166,7 @@ var RecipeBox = React.createClass({
                         </Modal.Body>
                         <Modal.Footer>
                             <Button onClick={this.addRecipe}>Close</Button>
-                            <Button onClick={this.addIngridients} bsStyle="primary">Save changes</Button>
+                            <Button onClick={this.saveRecipe} bsStyle="primary">Save changes</Button>
                         </Modal.Footer>
                     </Modal.Dialog>
                         : null
