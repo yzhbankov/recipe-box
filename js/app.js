@@ -1,11 +1,17 @@
 /**
  * Created by Iaroslav Zhbankov on 19.01.2017.
  */
-var recipes = [{"recipe": 'soup', "ingridients": 'onion, potato, wather', "id": 0}, {
+var startRecipes = [{"recipe": 'soup', "ingridients": 'onion, potato, wather', "id": 0}, {
     "recipe": 'salad',
     "ingridients": 'onion, cabbage, carrot',
     "id": 1
 }];
+if (JSON.parse(localStorage.getItem('Recipes')).length < startRecipes.length) {
+    localStorage.setItem('Recipes', JSON.stringify(startRecipes));
+} else {
+    var recipes = JSON.parse(localStorage.getItem('Recipes'));
+}
+
 var Collapse = ReactBootstrap.Collapse;
 var Button = ReactBootstrap.Button;
 var Modal = ReactBootstrap.Modal;
@@ -31,7 +37,7 @@ var Recipe = React.createClass({
     deleteRecipe: function (e) {
 
         recipes.splice(e.target.id, 1);
-        console.log(recipes);
+        localStorage.setItem('Recipes', JSON.stringify(recipes));
         this.setState({
             showRecipe: false
         });
@@ -49,7 +55,7 @@ var Recipe = React.createClass({
             "ingridients": document.getElementById('ingridients').value,
             "id": e.target.id
         };
-
+        localStorage.setItem('Recipes', JSON.stringify(recipes));
         this.setState({
             childVisible: !this.state.childVisible
         });
@@ -61,7 +67,7 @@ var Recipe = React.createClass({
                 <div className="panel panel-default">
                     <div className="panel-heading">
                         <h4 className="panel-title">
-                            <a onClick={ ()=> this.setState({ open: !this.state.open })}>{this.props.recipe.recipe}</a>
+                            <a onClick={ ()=> this.setState({ open: !this.state.open })} href='#'>{this.props.recipe.recipe}</a>
                         </h4>
                     </div>
                     <Collapse in={this.state.open}>
@@ -126,9 +132,8 @@ var RecipeBox = React.createClass({
     saveRecipe: function () {
         var recipeTitle = $("#recipeTitle").val();
         var ingidients = $("#ingridients").val();
-        console.log(recipeTitle);
         recipes.push({"recipe": recipeTitle, "ingridients": ingidients});
-
+        localStorage.setItem('Recipes', JSON.stringify(recipes));
         this.setState({
             childVisible: !this.state.childVisible,
             recipes: recipes
@@ -141,8 +146,8 @@ var RecipeBox = React.createClass({
             recipesList.push(<Recipe recipe={recipes[i]}/>)
         }
         return (
-            <div>
-                <div className='container'>Recipe Box</div>
+            <div className='holder'>
+                <div className='title'>Recipe Box</div>
                 {recipesList}
                 <Button onClick={this.addRecipe} bsStyle="primary">Add Recipe</Button>
                 {
