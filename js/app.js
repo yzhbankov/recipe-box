@@ -1,9 +1,9 @@
 /**
  * Created by Iaroslav Zhbankov on 19.01.2017.
  */
-var startRecipes = [{"recipe": 'soup', "ingridients": 'onion, potato, wather', "id": 0}, {
-    "recipe": 'salad',
-    "ingridients": 'onion, cabbage, carrot',
+var startRecipes = [{"recipe": 'Soup', "ingridients": 'onion, potato, carrot, chicken', "id": 0}, {
+    "recipe": 'Salad',
+    "ingridients": 'onion, cabbage, carrot, meat',
     "id": 1
 }];
 
