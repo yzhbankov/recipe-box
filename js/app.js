@@ -1,9 +1,10 @@
 /**
  * Created by Iaroslav Zhbankov on 19.01.2017.
  */
-var recipes = [{"recipe": 'soup', "ingridients": 'onion, potato, wather'}, {
+var recipes = [{"recipe": 'soup', "ingridients": 'onion, potato, wather', "id": 0}, {
     "recipe": 'salad',
-    "ingridients": 'onion, cabbage, carrot'
+    "ingridients": 'onion, cabbage, carrot',
+    "id": 1
 }];
 var Collapse = ReactBootstrap.Collapse;
 var Button = ReactBootstrap.Button;
@@ -13,7 +14,7 @@ var ControlLabel = ReactBootstrap.ControlLabel;
 var Recipe = React.createClass({
     getInitialState: function () {
         return {
-            state: {}
+            showRecipe: true
         }
     },
     getList: function (list) {
@@ -26,9 +27,19 @@ var Recipe = React.createClass({
             ingrList
         )
     },
+    deleteRecipe: function (e) {
+
+        recipes.splice(e.target.id, 1);
+        console.log(recipes);
+        this.setState({
+            showRecipe: false
+        });
+    },
     render: function () {
-        return (
-            <div>
+        var element = (<div></div>);
+
+        if (this.state.showRecipe) {
+            element = (<div>
                 <div className="panel panel-default">
                     <div className="panel-heading">
                         <h4 className="panel-title">
@@ -40,15 +51,17 @@ var Recipe = React.createClass({
                             <ul className="list-group">
                                 {
                                     this.getList(this.props.recipe.ingridients)
-
                                 }
                             </ul>
-                            <Button bsStyle="danger">Delete</Button>
-                            <Button>Edit</Button>
+                            <Button onClick={this.deleteRecipe} bsStyle="danger"
+                                    id={this.props.recipe.id}>Delete</Button>
+                            <Button onClick={this.editRecipe} id={this.props.recipe.id}>Edit</Button>
                         </div>
                     </Collapse>
                 </div>
-            </div>
+            </div>);
+        }
+        return (element
         )
     }
 });
@@ -72,6 +85,7 @@ var RecipeBox = React.createClass({
             recipes: recipes
         })
     },
+
     render: function () {
         const recipesList = [];
         for (var i = 0; i < recipes.length; i++) {
