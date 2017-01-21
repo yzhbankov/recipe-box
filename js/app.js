@@ -6,7 +6,8 @@ var startRecipes = [{"recipe": 'soup', "ingridients": 'onion, potato, wather', "
     "ingridients": 'onion, cabbage, carrot',
     "id": 1
 }];
-if (JSON.parse(localStorage.getItem('Recipes')).length < startRecipes.length) {
+
+if ((!JSON.parse(localStorage.getItem('Recipes'))) || (JSON.parse(localStorage.getItem('Recipes')).length < startRecipes.length)) {
     localStorage.setItem('Recipes', JSON.stringify(startRecipes));
 } else {
     var recipes = JSON.parse(localStorage.getItem('Recipes'));
@@ -25,14 +26,18 @@ var Recipe = React.createClass({
         }
     },
     getList: function (list) {
-        const ingr = list.split(',');
-        const ingrList = [];
-        for (var i = 0; i < ingr.length; i++) {
-            ingrList.push(<li className="list-group-item">{ingr[i]}</li>);
+        if (!list) {
+            return []
+        } else {
+            const ingr = list.split(',');
+            const ingrList = [];
+            for (var i = 0; i < ingr.length; i++) {
+                ingrList.push(<li className="list-group-item">{ingr[i]}</li>);
+            }
+            return (
+                ingrList
+            )
         }
-        return (
-            ingrList
-        )
     },
     deleteRecipe: function (e) {
 
@@ -48,11 +53,13 @@ var Recipe = React.createClass({
         });
     },
     saveEditions: function (e) {
-        this.props.recipe.recipe = document.getElementById('recipeTitle').value;
-        this.props.recipe.ingridients = document.getElementById('ingridients').value;
+        var recipeTitle = $("#recipeTitle").val() || 'Undefined';
+        var ingridients = $("#ingridients").val() || 'Undefined';
+        this.props.recipe.recipe = recipeTitle;
+        this.props.recipe.ingridients = ingridients;
         recipes[e.target.id] = {
-            "recipe": document.getElementById('recipeTitle').value,
-            "ingridients": document.getElementById('ingridients').value,
+            "recipe": recipeTitle,
+            "ingridients": ingridients,
             "id": e.target.id
         };
         localStorage.setItem('Recipes', JSON.stringify(recipes));
@@ -67,7 +74,8 @@ var Recipe = React.createClass({
                 <div className="panel panel-default">
                     <div className="panel-heading">
                         <h4 className="panel-title">
-                            <a onClick={ ()=> this.setState({ open: !this.state.open })} href='#'>{this.props.recipe.recipe}</a>
+                            <a onClick={ ()=> this.setState({ open: !this.state.open })}
+                               href='#'>{this.props.recipe.recipe}</a>
                         </h4>
                     </div>
                     <Collapse in={this.state.open}>
@@ -130,8 +138,8 @@ var RecipeBox = React.createClass({
         this.setState({childVisible: !this.state.childVisible})
     },
     saveRecipe: function () {
-        var recipeTitle = $("#recipeTitle").val();
-        var ingidients = $("#ingridients").val();
+        var recipeTitle = $("#recipeTitle").val() || 'Undefined';
+        var ingidients = $("#ingridients").val() || 'Undeined';
         recipes.push({"recipe": recipeTitle, "ingridients": ingidients});
         localStorage.setItem('Recipes', JSON.stringify(recipes));
         this.setState({
